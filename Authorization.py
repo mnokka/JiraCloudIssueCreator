@@ -44,7 +44,10 @@ def Authenticate(JIRASERVICE,PSWD,USER):
          print "Authentication OK \nHEADER: {0}".format(header)
          
     else:
-        print "--> ERROR: Apparantly user authentication gone wrong. EXITING!"   
+        print "--> ERROR: Apparantly user authentication gone wrong"   
+        print "HEADER: {0}".format(header)
+        print "EXITING!!!!"
+        
         sys.exit(1)  
     print "---------------------------------------------------------"
     return user,PASSWORD
