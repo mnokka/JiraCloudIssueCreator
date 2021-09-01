@@ -52,7 +52,7 @@ def main(argv):
     logging.debug (u"--Created date field copier starting --") 
 
  
-    parser = argparse.ArgumentParser(description=" Copy Jira JQL result issues attachments to given directory",
+    parser = argparse.ArgumentParser(description="Get given Jira instance and issue data",
     
     
     epilog="""
