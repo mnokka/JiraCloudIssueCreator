@@ -1,12 +1,8 @@
-# Used to get given Jira project issue data 
+# POC to create Jira Cloud issue
 #
-# 17.8.2020 mika.nokka1@gmail.com 
+# 7.9.2020 mika.nokka1@gmail.com 
 # 
-# NOTES:
-# 1) For this POC removed .netrc authetication, using pure arguments
-#
-# Traps worng JQL query and possible corrupted attachment case (not downloading corrupted fileS) 
-# 
+
 #
 # Python V2
 #
@@ -134,6 +130,7 @@ def Parse(JIRASERVICE,PSWD,USER,ENV,jira,SKIP):
                 logging.error("400 error dedected") 
     else:
         logging.info("All OK")
+        logging.info("Issue created:{0}".format(newissue))
   
         
     end = time.clock()
