@@ -44,10 +44,11 @@ def main(argv):
     JIRAPROJECT=u""
     PSWD=u''
     USER=u''
+    SUMMARY=u''
+    DESCRIPTION=u''
   
-    logging.debug (u"--Created date field copier starting --") 
 
- 
+
     parser = argparse.ArgumentParser(description="Get given Jira instance and issue data",
     
     
@@ -68,19 +69,20 @@ def main(argv):
     
     parser.add_argument('-v', help='Show version&author and exit', action='version',version="Version:{0}   mika.nokka1@gmail.com ,  MIT licenced ".format(__version__) )
     
-    parser.add_argument("-w",help='<JIRA password>',metavar="password")
+    parser.add_argument("-w",help='<JIRA Cloud token>',metavar="password")
     parser.add_argument('-u', help='<JIRA user account>',metavar="user")
     parser.add_argument('-s', help='<JIRA service>',metavar="server_address")
-   # parser.add_argument('-i', help='<JIRA IssueKey>',metavar="IssueKey")
+    parser.add_argument('-y', help='<JIRA issue summary>',metavar="IssueSummary")
     parser.add_argument('-r', help='<DryRun - do nothing but emulate. Off by default>',metavar="on|off",default="off")
- 
+    parser.add_argument('-d', help='<JIRA issue desciption>',metavar="IssueDescription")
 
     args = parser.parse_args()
        
     JIRASERVICE = args.s or ''
     PSWD= args.w or ''
     USER= args.u or ''
-    #ISSUE=args.i or ''
+    SUMMARY=args.y or ''
+    DESCRIPTION=args.d or ''
     if (args.r=="on"):
         SKIP=1
     else:
@@ -89,7 +91,7 @@ def main(argv):
     logging.info("PSWD:{0}".format(PSWD))
     
     # quick old-school way to check needed parameters
-    if (JIRASERVICE=='' or  PSWD=='' or USER=='' ):
+    if (JIRASERVICE=='' or  PSWD=='' or USER=='' or  SUMMARY=='' or  DESCRIPTION=='' ):
         logging.error("\n---> MISSING ARGUMENTS!!\n ")
         parser.print_help()
         sys.exit(2)
@@ -98,7 +100,7 @@ def main(argv):
     Authenticate(JIRASERVICE,PSWD,USER)
     jira=DoJIRAStuff(USER,PSWD,JIRASERVICE)
     
-    Parse(JIRASERVICE,PSWD,USER,ENV,jira,SKIP)
+    Parse(JIRASERVICE,PSWD,USER,ENV,jira,SKIP,SUMMARY,DESCRIPTION)
 
 
 
@@ -108,7 +110,7 @@ def main(argv):
 
 #NOTE: Uses hardcoded sheet/column value
 
-def Parse(JIRASERVICE,PSWD,USER,ENV,jira,SKIP):
+def Parse(JIRASERVICE,PSWD,USER,ENV,jira,SKIP,SUMMARY,DESCRIPTION):
 
 
     try:    
@@ -119,8 +121,8 @@ def Parse(JIRASERVICE,PSWD,USER,ENV,jira,SKIP):
             'issuetype': {
                 "name": "Task"
             },
-            'summary': 'Hardcoded task REST API example - via Python Jira library',
-            'description': 'This is hardcoded rest is best description text',
+            'summary': SUMMARY,
+            'description': DESCRIPTION,
             })
     
     except JIRAError as e: 
