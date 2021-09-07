@@ -75,7 +75,7 @@ def main(argv):
     parser.add_argument("-w",help='<JIRA password>',metavar="password")
     parser.add_argument('-u', help='<JIRA user account>',metavar="user")
     parser.add_argument('-s', help='<JIRA service>',metavar="server_address")
-    parser.add_argument('-i', help='<JIRA IssueKey>',metavar="IssueKey")
+   # parser.add_argument('-i', help='<JIRA IssueKey>',metavar="IssueKey")
     parser.add_argument('-r', help='<DryRun - do nothing but emulate. Off by default>',metavar="on|off",default="off")
  
 
@@ -84,7 +84,7 @@ def main(argv):
     JIRASERVICE = args.s or ''
     PSWD= args.w or ''
     USER= args.u or ''
-    ISSUE=args.i or ''
+    #ISSUE=args.i or ''
     if (args.r=="on"):
         SKIP=1
     else:
@@ -93,7 +93,7 @@ def main(argv):
     logging.info("PSWD:{0}".format(PSWD))
     
     # quick old-school way to check needed parameters
-    if (JIRASERVICE=='' or  PSWD=='' or USER==''  or ISSUE==''):
+    if (JIRASERVICE=='' or  PSWD=='' or USER=='' ):
         logging.error("\n---> MISSING ARGUMENTS!!\n ")
         parser.print_help()
         sys.exit(2)
@@ -102,26 +102,30 @@ def main(argv):
     Authenticate(JIRASERVICE,PSWD,USER)
     jira=DoJIRAStuff(USER,PSWD,JIRASERVICE)
     
-    Parse(JIRASERVICE,PSWD,USER,ENV,jira,SKIP,ISSUE)
+    Parse(JIRASERVICE,PSWD,USER,ENV,jira,SKIP)
 
 
 
 ############################################################################################################################################
-# Parse attachment files and add to matching Jira issue
+# Parse args and cre<te Jira Cloud issue
 #
 
 #NOTE: Uses hardcoded sheet/column value
 
-def Parse(JIRASERVICE,PSWD,USER,ENV,jira,SKIP,ISSUE):
+def Parse(JIRASERVICE,PSWD,USER,ENV,jira,SKIP):
 
 
     try:    
-       issue = jira.issue(ISSUE)
-    
-       logging.debug ("Issue Data: {0}".format(issue.fields))
-       
-       for field_name in issue.raw['fields']:
-               print ("Field:{0}  Value:{1}".format(field_name,issue.raw['fields'][field_name]))
+
+            # hadrcoded issue creation to test functionality, note hardcoded project key
+            newissue=jira.create_issue(fields={
+            'project': {'key': 'RESPOC'},
+            'issuetype': {
+                "name": "Task"
+            },
+            'summary': 'Hardcoded task REST API example - via Python Jira library',
+            'description': 'This is hardcoded rest is best description text',
+            })
     
     except JIRAError as e: 
             logging.error(" ********** JIRA ERROR DETECTED: ***********")
